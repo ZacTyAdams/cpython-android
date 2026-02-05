@@ -1,23 +1,12 @@
 {
-    "image": "ghcr.io/python/devcontainer:latest",
-    "onCreateCommand": [
-        // Install common tooling.
-        "dnf",
-        "install",
-        "-y",
-        // For umask fix below.
-        "/usr/bin/setfacl"
-    ],
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+    "remoteUser": "dev",
     "updateContentCommand": {
         // Using the shell for `nproc` usage.
-        "python": "./configure --config-cache --with-pydebug && make -s -j `nproc`",
-        "docs": [
-            "make",
-            "--directory",
-            "Doc",
-            "venv",
-            "html"
-        ]
+        "python": "rm -f config.cache || true && make distclean || true && ./configure --config-cache --with-pydebug && make -s -j `nproc`",
+        "docs": "make --directory Doc venv || true && make --directory Doc html || true"
     },
     "postCreateCommand": {
         // https://github.com/orgs/community/discussions/26026
